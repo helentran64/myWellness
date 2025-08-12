@@ -4,6 +4,10 @@ const dotenv = require("dotenv");
 const mysqlPool = require("./config/db");
 
 dotenv.config({ path: "./.env" });
+app.use(express.json());
+
+// routes
+app.use('/api/users', require('./routes/userRouter'));
 
 app.get("/test", (req, res) => {
   res.send("Hello World from Express.js!");
