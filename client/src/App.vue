@@ -20,6 +20,11 @@ function toggleTheme() {
           </RouterLink>
           <span class="navItems">
             <v-btn @click="toggleTheme" icon="mdi-lightbulb-on" variant="plain" class="mb-2" />
+            <v-btn
+              color="primary"
+              class="mr-2 capitalizeButton"
+              >Sign Out</v-btn
+            >
           </span>
         </div>
       </nav>
