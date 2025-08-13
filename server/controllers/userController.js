@@ -73,7 +73,6 @@ const getUserById = async (req, res) => {
  */
 const createUser = async (req, res) => {
   try {
-    console.log("req.body:", req.body);
     const { firstName, lastName, email, username, password } = req.body;
     if (!firstName || !lastName || !email || !username || !password) {
       return res
