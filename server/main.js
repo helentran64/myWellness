@@ -2,9 +2,11 @@ const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
 const mysqlPool = require("./config/db");
+const cors = require('cors');
 
 dotenv.config({ path: "./.env" });
 app.use(express.json());
+app.use(cors());
 
 // routes
 app.use('/api/users', require('./routes/userRouter'));

@@ -6,11 +6,13 @@
           Empower your wellness journey <br />
           Your path to a healthier life starts here
         </p>
-        <v-btn color="primary">Get Started</v-btn>
+        <v-btn color="primary" to="/signup">Get Started</v-btn>
+        <!-- @todo need to create page that explains the application -->
+        <v-btn color="secondary" class="ml-2">Learn More</v-btn>
       </div>
       <div class="ml-10">
         <div class="homepageWelcomeImage">
-          <img src="@/assets/images/randomFoods.png" alt="Foods" height="400" width="400" />
+          <div class="homepageWelcomeImagePlaceholder">image placeholder</div>
         </div>
       </div>
     </div>
@@ -51,5 +53,11 @@ p {
   display: flex;
   justify-content: center;
   padding-right: 50px;
+}
+.homepageWelcomeImagePlaceholder {
+  width: 500px;
+  height: 300px;
+  background-color: white;
+  color: black;
 }
 </style>
