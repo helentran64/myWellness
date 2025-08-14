@@ -7,8 +7,7 @@
           <span style="font-size: 1.3rem;">Your path to a healthier life starts here.</span>
         </p>
         <v-btn color="primary" to="/signup">Get Started</v-btn>
-        <!-- @todo need to create page that explains the application -->
-        <v-btn color="secondary" class="ml-2">Learn More</v-btn>
+        <v-btn color="secondary" to="/learn-more" class="ml-2">Learn More</v-btn>
       </div>
       <div class="ml-10">
         <div class="homepageWelcomeImage">
