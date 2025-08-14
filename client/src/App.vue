@@ -35,7 +35,8 @@ function toggleTheme() {
 
 <style scoped>
 .navbar {
-  padding: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
   display: flex;
   justify-content: flex-start;
   position: relative;
