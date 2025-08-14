@@ -12,7 +12,7 @@
       </div>
       <div class="ml-10">
         <div class="homepageWelcomeImage">
-          <img src="@/assets/images/homepageImage.png" alt="food image" height="400px"/>
+          <img src="@/assets/images/homepageImage.png" alt="notes image" height="400px"/>
         </div>
       </div>
     </div>
