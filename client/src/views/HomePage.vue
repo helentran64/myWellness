@@ -3,8 +3,8 @@
     <div class="homepageWelcomeContent">
       <div class="mr-10">
         <p>
-          Empower your wellness journey <br />
-          Your path to a healthier life starts here
+          Empower your wellness journey. <br />
+          <span style="font-size: 1.3rem;">Your path to a healthier life starts here.</span>
         </p>
         <v-btn color="primary" to="/signup">Get Started</v-btn>
         <!-- @todo need to create page that explains the application -->
@@ -12,7 +12,7 @@
       </div>
       <div class="ml-10">
         <div class="homepageWelcomeImage">
-          <div class="homepageWelcomeImagePlaceholder">image placeholder</div>
+          <img src="@/assets/images/homepageImage.png" alt="food image" height="400px"/>
         </div>
       </div>
     </div>
@@ -23,7 +23,7 @@ import { VBtn } from 'vuetify/components'
 </script>
 <style scoped>
 .homepageWelcomeContainer {
-  height: 50vh;
+  height: 80vh;
   width: 100vw;
   margin: 0;
   font-size: 25px;
@@ -52,12 +52,5 @@ p {
   flex: 1;
   display: flex;
   justify-content: center;
-  padding-right: 50px;
-}
-.homepageWelcomeImagePlaceholder {
-  width: 500px;
-  height: 300px;
-  background-color: white;
-  color: black;
 }
 </style>
