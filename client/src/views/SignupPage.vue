@@ -53,9 +53,12 @@
 import { VBtn, VTextField } from 'vuetify/components'
 import { ref } from 'vue'
 import axios from 'axios'
-import { useRouter, RouterLink } from "vue-router";
+import { useRouter, RouterLink } from 'vue-router'
+import { useUserStore } from '@/stores/userStore'
 
-const router = useRouter();
+const userStore = useUserStore()
+
+const router = useRouter()
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
@@ -76,7 +79,13 @@ async function signup() {
   try {
     const res = await axios.post('http://localhost:3000/api/users/create', user)
     if (res.status === 201) {
-      router.push('/')
+      const user = await axios.get(
+        `http://localhost:3000/api/users/get_by_username/${username.value}`,
+      )
+      if (user.status === 200) {
+        userStore.login(user.data.data)
+        router.push('/')
+      }
     }
   } catch (error) {
     console.error('Error signing up:', error)
