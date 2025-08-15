@@ -35,7 +35,9 @@ import { RouterLink } from 'vue-router'
 import { ref } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/userStore'
 
+const userStore = useUserStore()
 const username = ref('')
 const password = ref('')
 const loginError = ref(false)
@@ -44,7 +46,7 @@ async function LogUserIn() {
   try {
     const res = await axios.get(`http://localhost:3000/api/users/get_by_username/${username.value}`)
     if (res.data.data.password === password.value) {
-      // Redirect to the home page if login is successful
+      userStore.login(res.data.data)
       router.push('/')
     } else {
       loginError.value = true

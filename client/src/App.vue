@@ -2,10 +2,18 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { useTheme } from 'vuetify'
 import { VBtn } from 'vuetify/components'
+import { useUserStore } from '@/stores/userStore'
 
+const userStore = useUserStore()
 const theme = useTheme()
 function toggleTheme() {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
+
+function signOut() {
+  userStore.logout()
+  // Redirect to the home page after signing out
+  window.location.href = '/'
 }
 </script>
 
@@ -21,10 +29,14 @@ function toggleTheme() {
           <span class="navItems">
             <v-btn @click="toggleTheme" icon="mdi-lightbulb-on" variant="plain" class="mb-2" />
             <!-- Only see sign out button if user is signed in -->
-            <v-btn color="primary" class="mr-2">Sign Out</v-btn>
+            <v-btn color="primary" class="mr-2" v-if="userStore.isLoggedIn" @click="signOut">Sign Out</v-btn>
             <!-- Only see sign up and log in button if the user is signed out -->
-            <v-btn color="primary" class="mr-2" to="/signup">Sign up</v-btn>
-            <v-btn color="primary" class="mr-2" to="/login">Log In</v-btn>
+            <v-btn color="primary" class="mr-2" to="/signup" v-if="userStore.isLoggedOut"
+              >Sign up</v-btn
+            >
+            <v-btn color="primary" class="mr-2" to="/login" v-if="userStore.isLoggedOut"
+              >Log In</v-btn
+            >
           </span>
         </div>
       </nav>
