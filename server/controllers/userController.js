@@ -77,7 +77,6 @@ const getUserByUsername = async (req, res) => {
     const data = await db.query("SELECT * FROM users WHERE username = ?", [
       username,
     ]);
-    console.log(data[0][0]);
     if (data[0].length === 0) {
       return res
         .status(404)
