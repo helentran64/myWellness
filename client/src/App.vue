@@ -24,7 +24,7 @@ function toggleTheme() {
             <v-btn color="primary" class="mr-2">Sign Out</v-btn>
             <!-- Only see sign up and log in button if the user is signed out -->
             <v-btn color="primary" class="mr-2" to="/signup">Sign up</v-btn>
-            <v-btn color="primary" class="mr-2">Log In</v-btn>
+            <v-btn color="primary" class="mr-2" to="/login">Log In</v-btn>
           </span>
         </div>
       </nav>

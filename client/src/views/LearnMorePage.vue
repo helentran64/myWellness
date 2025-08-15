@@ -2,7 +2,7 @@
   <div class="aboutContainer">
     <v-row>
       <v-col v-for="info in information" :key="info.title" cols="6" sm="12" md="6" class="mb-4">
-        <v-card :prepend-icon="info.icon" width="100%">
+        <v-card :prepend-icon="info.icon" width="100%" variant="outlined">
           <template v-slot:title>
             {{ info.title }}
           </template>
