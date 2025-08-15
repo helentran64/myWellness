@@ -17,6 +17,11 @@ const router = createRouter({
       path: '/learn-more',
       name: 'learn-more',
       component: () => import('@/views/LearnMorePage.vue'),
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/LoginPage.vue'),
     }
   ],
 })

@@ -62,6 +62,39 @@ const getUserById = async (req, res) => {
 };
 
 /**
+ * Retrieves a user by their username from the database.
+ * @async
+ * @function getUserByUsername
+ * @param {Object} req - Express request object.
+ * @param {Object} req.params - Request parameters.
+ * @param {string} req.params.username - The username of the user to retrieve.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} Sends a JSON response with user data if found, or an error message if not.
+ */
+const getUserByUsername = async (req, res) => {
+  const username = req.params.username;
+  try {
+    const data = await db.query("SELECT * FROM users WHERE username = ?", [
+      username,
+    ]);
+    console.log(data[0][0]);
+    if (data[0].length === 0) {
+      return res
+        .status(404)
+        .send({ success: false, message: "User not found" });
+    }
+    res
+      .status(200)
+      .send({ success: true, message: "User found", data: data[0][0] });
+  } catch (error) {
+    console.error("Error fetching user by username:", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Internal Server Error", error });
+  }
+};
+
+/**
  * Creates a new user in the database.
  *
  * @async
@@ -165,4 +198,10 @@ const updateUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, getUserById, createUser, updateUser };
+module.exports = {
+  getUsers,
+  getUserById,
+  getUserByUsername,
+  createUser,
+  updateUser,
+};
