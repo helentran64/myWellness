@@ -18,4 +18,6 @@ export const useUserStore = defineStore('user', {
       this.user = null
     },
   },
+  // @ts-expect-error
+  persist: true,
 })
