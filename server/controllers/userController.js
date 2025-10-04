@@ -79,7 +79,6 @@ const getUserByUsername = async (req, res) => {
     ]);
     if (data[0].length === 0) {
       return res
-        .status(404)
         .send({ success: false, message: "User not found" });
     }
     res

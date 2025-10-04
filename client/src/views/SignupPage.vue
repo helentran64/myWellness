@@ -1,6 +1,7 @@
 <template>
   <div class="signupContainer">
     <h1>myWellness</h1>
+    <span style="color: red">{{ errorMessages }}</span>
     <div class="signupFormInput">
       <v-text-field
         v-model="firstName"
@@ -64,6 +65,7 @@ const lastName = ref('')
 const email = ref('')
 const username = ref('')
 const password = ref('')
+const errorMessages = ref('')
 
 /**
  * Add user into the database after signing up for an account
@@ -77,19 +79,28 @@ async function signup() {
     password: password.value,
   }
   try {
-    const res = await axios.post('http://localhost:3000/api/users/create', user)
-    if (res.status === 201) {
-      const user = await axios.get(
-        `http://localhost:3000/api/users/get_by_username/${username.value}`,
-      )
-      if (user.status === 200) {
-        userStore.login(user.data.data)
-        userStore.login({
-          username: user.data.data.username,
-          fullName: user.data.data.firstName + ' ' + user.data.data.lastName,
-          email: user.data.data.email,
-        })
-        router.push('/food-questionnaire')
+    // only create user if username is unique
+    const existingUser = await axios.get(
+      `http://localhost:3000/api/users/get_by_username/${username.value}`,
+    )
+    if (existingUser.data.data) {
+      errorMessages.value = 'Username already exists. Please choose another one.'
+      return
+    } else {
+      const res = await axios.post('http://localhost:3000/api/users/create', user)
+      if (res.status === 201) {
+        const user = await axios.get(
+          `http://localhost:3000/api/users/get_by_username/${username.value}`,
+        )
+        if (user.status === 200) {
+          userStore.login(user.data.data)
+          userStore.login({
+            username: user.data.data.username,
+            fullName: user.data.data.firstName + ' ' + user.data.data.lastName,
+            email: user.data.data.email,
+          })
+          router.push('/food-questionnaire')
+        }
       }
     }
   } catch (error) {

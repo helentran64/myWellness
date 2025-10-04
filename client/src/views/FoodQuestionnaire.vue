@@ -135,11 +135,13 @@ async function complete() {
     ],
   }
   try {
-    await axios.post(
+    const res = await axios.post(
       'http://localhost:3000/api/questionnaire/save',
       questionnaireResults,
     )
-    router.push('/')
+    if (res.status === 200) {
+      router.push('/')
+    }
   } catch (error) {
     console.error('Error saving questionnaire:', error)
   }
