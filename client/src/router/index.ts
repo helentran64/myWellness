@@ -27,6 +27,11 @@ const router = createRouter({
       path: '/food-questionnaire',
       name: 'food-questionnaire',
       component: () => import('@/views/FoodQuestionnaire.vue'),
+    },
+    {
+      path: '/my-profile',
+      name: 'my-profile',
+      component: () => import('@/views/MyProfile.vue'),
     }
   ],
 })

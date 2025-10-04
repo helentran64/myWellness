@@ -28,8 +28,18 @@ function signOut() {
           </RouterLink>
           <span class="navItems">
             <v-btn @click="toggleTheme" icon="mdi-lightbulb-on" variant="plain" class="mb-2" />
+            <!-- Only see profile icon if user is signed in -->
+            <v-btn
+              icon="mdi-account-circle"
+              variant="plain"
+              class="mb-2"
+              to="/my-profile"
+              v-if="userStore.isLoggedIn"
+            />
             <!-- Only see sign out button if user is signed in -->
-            <v-btn color="primary" class="mr-2" v-if="userStore.isLoggedIn" @click="signOut">Sign Out</v-btn>
+            <v-btn color="primary" class="mr-2" v-if="userStore.isLoggedIn" @click="signOut"
+              >Sign Out</v-btn
+            >
             <!-- Only see sign up and log in button if the user is signed out -->
             <v-btn color="primary" class="mr-2" to="/signup" v-if="userStore.isLoggedOut"
               >Sign up</v-btn
