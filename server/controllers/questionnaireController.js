@@ -30,7 +30,7 @@ const insertQuestionnaireResponse = async (req, res) => {
     await db.query(query, values);
 
     res
-      .status(201)
+      .status(200)
       .send({ success: true, message: "Responses recorded successfully" });
   } catch (error) {
     console.error("Error inserting questionnaire responses:", error);
