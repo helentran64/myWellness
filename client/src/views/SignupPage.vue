@@ -84,7 +84,7 @@ async function signup() {
       )
       if (user.status === 200) {
         userStore.login(user.data.data)
-        router.push('/')
+        router.push('/food-questionnaire')
       }
     }
   } catch (error) {

@@ -108,6 +108,7 @@ import axios from 'axios'
 import { ref } from 'vue'
 import { VStepper, VCard, VCheckbox, VTextField, VBtn } from 'vuetify/components'
 import { useUserStore } from '@/stores/userStore'
+import router from '@/router'
 
 const userStore = useUserStore()
 const step = ref(1)
@@ -134,12 +135,11 @@ async function complete() {
     ],
   }
   try {
-    const res = await axios.post(
+    await axios.post(
       'http://localhost:3000/api/questionnaire/save',
       questionnaireResults,
     )
-    console.log('Saved:', res.data)
-    // Optionally handle redirect or summary here
+    router.push('/')
   } catch (error) {
     console.error('Error saving questionnaire:', error)
   }

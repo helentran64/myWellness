@@ -8,7 +8,6 @@
         </p>
         <v-btn color="primary" to="/signup">Get Started</v-btn>
         <v-btn color="secondary" to="/learn-more" class="ml-2">Learn More</v-btn>
-        <v-btn color="tertiary" to="/food-questionnaire" class="ml-2">Questionnaire</v-btn>
       </div>
       <div class="ml-10">
         <div class="homepageWelcomeImage">
