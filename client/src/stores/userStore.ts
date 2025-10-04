@@ -1,23 +1,25 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-export const useUserStore = defineStore('user', {
-  state: () => ({
-    isLoggedIn: false,
-    isLoggedOut: true,
-    user: null as null | { username: string; email: string; /* add more fields as needed */ },
-  }),
-  actions: {
-    login(userData: { username: string; email: string }) {
-      this.isLoggedIn = true
-      this.isLoggedOut = false
-      this.user = userData
-    },
-    logout() {
-      this.isLoggedIn = false
-      this.isLoggedOut = true
-      this.user = null
-    },
-  },
-  // @ts-expect-error
-  persist: true,
-})
+export const useUserStore = defineStore('user', () => {
+  const isLoggedIn = ref(false)
+  const isLoggedOut = ref(true)
+  const user = ref<null | { username: string; email: string }> (null)
+
+  function login(userData: { username: string; email: string }) {
+    isLoggedIn.value = true
+    isLoggedOut.value = false
+    user.value = userData
+  }
+
+  function logout() {
+    isLoggedIn.value = false
+    isLoggedOut.value = true
+    user.value = null
+  }
+
+  return { isLoggedIn, isLoggedOut, user, login, logout }
+}, 
+// @ts-ignore
+{ persist: true }
+)
