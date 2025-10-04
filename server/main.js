@@ -10,6 +10,7 @@ app.use(cors());
 
 // routes
 app.use('/api/users', require('./routes/userRouter'));
+app.use('/api/questionnaire', require('./routes/questionnaireRouter'));
 
 app.get("/test", (req, res) => {
   res.send("Hello World from Express.js!");
