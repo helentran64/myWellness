@@ -14,7 +14,6 @@ const db = require("../config/db");
  */
 const insertQuestionnaireResponse = async (req, res) => {
   const { username, restriction } = req.body;
-
   if (!username || !restriction || !Array.isArray(restriction)) {
     return res.status(400).send({
       success: false,
@@ -22,13 +21,10 @@ const insertQuestionnaireResponse = async (req, res) => {
         "Invalid request body. 'username' and 'restriction' are required.",
     });
   }
-
   try {
     const query = `INSERT INTO questionnaire (username, restriction) VALUES (?, ?)`;
     const values = [username, JSON.stringify(restriction)];
-
     await db.query(query, values);
-
     res
       .status(200)
       .send({ success: true, message: "Responses recorded successfully" });
@@ -55,25 +51,20 @@ const insertQuestionnaireResponse = async (req, res) => {
  */
 const getQuestionnaireByUsername = async (req, res) => {
   const { username } = req.params;
-
   if (!username) {
     return res
       .status(400)
       .send({ success: false, message: "Username parameter is required." });
   }
-
   try {
     const query = `SELECT * FROM questionnaire WHERE username = ?`;
     const values = [username];
-
     const [rows] = await db.query(query, values);
-
     if (rows.length === 0) {
       return res
         .status(404)
         .send({ success: false, message: "No responses found for this user." });
     }
-
     res.status(200).send({ success: true, data: rows[0] });
   } catch (error) {
     console.error("Error fetching questionnaire responses:", error);

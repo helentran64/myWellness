@@ -6,7 +6,7 @@
           Empower your wellness journey. <br />
           <span style="font-size: 1.3rem;">Your path to a healthier life starts here.</span>
         </p>
-        <v-btn color="primary" to="/signup">Get Started</v-btn>
+        <v-btn color="primary" to="/signup" v-if="!userStore.isLoggedIn">Get Started</v-btn>
         <v-btn color="secondary" to="/learn-more" class="ml-2">Learn More</v-btn>
       </div>
       <div class="ml-10">
@@ -19,6 +19,9 @@
 </template>
 <script setup lang="ts">
 import { VBtn } from 'vuetify/components'
+import { useUserStore } from '@/stores/userStore'
+
+const userStore = useUserStore()
 </script>
 <style scoped>
 .homepageWelcomeContainer {

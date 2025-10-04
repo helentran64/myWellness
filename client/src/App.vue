@@ -32,7 +32,7 @@ function signOut() {
             <v-btn
               icon="mdi-account-circle"
               variant="plain"
-              class="mb-2"
+              class="mb-2 mr-2"
               to="/my-profile"
               v-if="userStore.isLoggedIn"
             />
