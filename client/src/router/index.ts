@@ -32,6 +32,16 @@ const router = createRouter({
       path: '/my-profile',
       name: 'my-profile',
       component: () => import('@/views/MyProfile.vue'),
+    },
+    {
+      path: '/food-log',
+      name: 'food-log',
+      component: () => import('@/views/FoodLog.vue'),
+    },
+    {
+      path: '/add-food',
+      name: 'add-food',
+      component: () => import('@/views/AddFood.vue'),
     }
   ],
 })

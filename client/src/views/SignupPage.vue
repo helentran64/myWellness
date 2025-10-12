@@ -93,7 +93,6 @@ async function signup() {
           `http://localhost:3000/api/users/get_by_username/${username.value}`,
         )
         if (user.status === 200) {
-          userStore.login(user.data.data)
           userStore.login({
             username: user.data.data.username,
             fullName: user.data.data.firstName + ' ' + user.data.data.lastName,

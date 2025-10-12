@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import { useTheme } from 'vuetify'
 import { VBtn } from 'vuetify/components'
 import { useUserStore } from '@/stores/userStore'
+import MyFooter from '@/components/MyFooter.vue'
 
 const userStore = useUserStore()
 const theme = useTheme()
@@ -53,6 +54,9 @@ function signOut() {
     </div>
   </header>
   <RouterView />
+  <footer class="text-center pa-4">
+    <MyFooter />
+  </footer>
 </template>
 
 <style scoped>
