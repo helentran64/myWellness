@@ -43,12 +43,11 @@
     >
       <template v-slot:[`item.food`]="{ item }">
         <div class="font-medium text-gray-900">{{ item.food.name }}</div>
-        <!-- <div class="text-gray-500 text-sm">{{ item.mealType }}</div> -->
       </template>
 
       <!-- Action Column -->
       <template v-slot:[`item.action`]="{ item }">
-        <v-btn icon="mdi-delete" color="red" variant="text" @click="deleteLog(item)"></v-btn>
+        <v-btn icon="mdi-delete" color="red" variant="text" @click="openDeleteModal(item)"></v-btn>
       </template>
 
       <!-- Nutrient Columns -->
@@ -64,6 +63,14 @@
       <template v-slot:[`item.mealType`]="{ item }">{{ item.mealType }}</template>
     </v-data-table-virtual>
   </div>
+
+  <!-- Delete Modal rendered once at root -->
+  <DeleteModal
+    v-if="itemToDelete"
+    :food-name="itemToDelete.food.name"
+    v-model:visible="showDeleteModal"
+    @confirm="handleDeleteConfirm"
+  />
 </template>
 
 <script setup lang="ts">
@@ -71,6 +78,7 @@ import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { VDataTableVirtual, VBtn, VMenu, VDatePicker, VIcon } from 'vuetify/components'
 import { useUserStore } from '@/stores/userStore'
+import DeleteModal from '@/components/Modals/deleteModal.vue'
 
 // ---------------------
 // Stores & Refs
@@ -100,16 +108,31 @@ type FoodLog = {
 
 type FoodLogItem = FoodLog & { id: number }
 
+type HeaderAlign = 'start' | 'end' | 'center'
+
 // typed ref for food logs
 const foodLogs = ref<FoodLog[]>([])
 const selectedDate = ref(new Date()) // currently selected date
 const menu = ref(false) // date picker menu open/close
 const today = new Date().toISOString().split('T')[0] // max selectable date
+const showDeleteModal = ref(false) // delete modal visibility
+const itemToDelete = ref<FoodLogItem | null>(null)
+
+function openDeleteModal(item: FoodLogItem) {
+  itemToDelete.value = item
+  showDeleteModal.value = true
+}
+
+function handleDeleteConfirm() {
+  if (itemToDelete.value) {
+    deleteLog(itemToDelete.value)
+    itemToDelete.value = null
+  }
+}
 
 // ---------------------
 // Table headers
 // ---------------------
-type HeaderAlign = 'start' | 'end' | 'center'
 const headers: { title: string; key: string; align?: HeaderAlign }[] = [
   { title: 'Meal Type', key: 'mealType', align: 'center' },
   { title: 'Food', key: 'food', align: 'start' },
