@@ -145,7 +145,6 @@ const filteredLogs = computed(() => {
 // Delete log
 // ---------------------
 async function deleteLog(item: any) {
-  if (!confirm(`Remove ${item.food.name} from log?`)) return
   try {
     await axios.delete(
       `http://localhost:3000/api/foodlog/delete/${item.username}/${item.date}/${item.mealType}/${item.food.name}`,
