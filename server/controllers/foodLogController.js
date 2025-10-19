@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const ExcelJS = require('exceljs');
 
 const insertFoodLog = async (req, res) => {
   const { username, food, mealType } = req.body;
@@ -79,5 +80,79 @@ const deleteFoodLog = async (req, res) => {
   }
 }
 
+const downloadFoodLogs = async (req, res) => {
+  try {
+    const username = req.query.username || req.user?.username || '';
+    console.log('Download requested for username:', username);
+    
+    // Get all food logs for the user
+    const [rows] = await db.query(
+      'SELECT date, mealType, food FROM food_log WHERE username = ? ORDER BY date DESC',
+      [username]
+    );
 
-module.exports = { insertFoodLog, getFoodLogs, deleteFoodLog };
+    console.log('Rows returned from database:', rows.length);
+    console.log('First few rows:', rows.slice(0, 2));
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Food Logs');
+
+    // Define columns to match frontend headers (excluding username)
+    worksheet.columns = [
+      { header: 'Date', key: 'date', width: 12 },
+      { header: 'Meal Type', key: 'mealType', width: 15 },
+      { header: 'Food', key: 'foodName', width: 30 },
+      { header: 'Calories', key: 'calories', width: 10 },
+      { header: 'Protein (g)', key: 'protein', width: 12 },
+      { header: 'Carbs (g)', key: 'carbs', width: 12 },
+      { header: 'Fat (g)', key: 'fat', width: 10 },
+      { header: 'Sodium', key: 'sodium', width: 10 },
+      { header: 'Sugar', key: 'sugar', width: 10 },
+      { header: 'Serving Weight (g)', key: 'servingWeight', width: 18 },
+      { header: 'Serving Unit', key: 'servingUnit', width: 15 },
+      { header: 'Serving Quantity', key: 'servingQuant', width: 18 },
+    ];
+
+    // Add data rows by parsing food JSON
+    rows.forEach((row, index) => {
+      let food = {};
+      try {
+        food = JSON.parse(row.food);
+        console.log(`Row ${index} parsed successfully:`, food);
+      } catch (e) {
+        console.error(`Error parsing food JSON for row ${index}:`, e.message);
+        console.error('Raw food data:', row.food);
+      }
+      
+      worksheet.addRow({
+        date: row.date,
+        mealType: row.mealType,
+        foodName: food.name || '',
+        calories: food.calories ?? '',
+        protein: food.protein ?? '',
+        carbs: food.carbs ?? '',
+        fat: food.fat ?? '',
+        sodium: food.sodium ?? '',
+        sugar: food.sugar ?? '',
+        servingWeight: food.servingWeight ?? '',
+        servingUnit: food.servingUnit ?? '',
+        servingQuant: food.servingQuant ?? '',
+      });
+    });
+
+    console.log('Total rows added to worksheet:', worksheet.rowCount - 1); // -1 for header
+
+    // Set response headers
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=food_log.xlsx');
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    console.error('Excel download error:', error);
+    res.status(500).send('Error generating Excel file');
+  }
+};
+
+
+module.exports = { insertFoodLog, getFoodLogs, deleteFoodLog, downloadFoodLogs };
