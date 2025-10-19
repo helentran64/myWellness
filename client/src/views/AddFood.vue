@@ -33,10 +33,10 @@
         style="width: 55%; min-width: 400px"
         class="flex-grow-1"
       >
-        <template #item.food="{ item }">
+        <template v-slot:[`item.food`]="{ item }">
           <span>{{ item.name }}</span>
         </template>
-        <template #item.select="{ item }">
+        <template v-slot:[`item.select`]="{ item }">
           <v-checkbox
             v-model="item.checked"
             color="primary"
@@ -237,9 +237,10 @@ function updateNutrition(item: FoodItem) {
 async function handleSearch() {
   if (searchQuery.value.trim() !== '' && mealType.value !== '') {
     try {
-      const results = await searchFood(searchQuery.value)
+      type SearchResult = Partial<FoodItem> & { name: string; tag_id: string }
+      const results = (await searchFood(searchQuery.value)) as SearchResult[]
       if (results && results.length > 0) {
-        foodList.value = results.map((r: any) => ({
+        foodList.value = results.map((r: SearchResult) => ({
           ...r,
           checked: false,
           loading: false,
