@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex justify-between align-center mx-auto mt-8" style="width: 90%">
+  <div class="d-flex align-center mx-auto mt-8" style="width: 90%">
     <!-- Add Food Button -->
     <v-btn icon="mdi-plus" color="green" @click="$router.push('/add-food')"></v-btn>
 
@@ -26,6 +26,9 @@
       <!-- Next Day -->
       <v-btn icon="mdi-chevron-right" variant="tonal" color="grey" @click="nextDate"></v-btn>
     </div>
+
+    <div style="flex: 1"></div>
+    <v-btn color="primary" @click="downloadExcel"> Download Excel </v-btn>
   </div>
 
   <!-- Table -->
@@ -155,6 +158,15 @@ async function deleteLog(item: any) {
   } catch (err) {
     console.error('Error deleting food log:', err)
   }
+}
+
+function downloadExcel() {
+  const username = userStore.user?.username;
+  if (!username) {
+    alert('No username found. Please log in.');
+    return;
+  }
+  window.open(`http://localhost:3000/api/foodlog/download?username=${encodeURIComponent(username)}`, '_blank');
 }
 </script>
 
