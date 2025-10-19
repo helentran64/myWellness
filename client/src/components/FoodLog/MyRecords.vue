@@ -27,6 +27,7 @@
       <v-btn icon="mdi-chevron-right" variant="tonal" color="grey" @click="nextDate"></v-btn>
     </div>
 
+    <!-- Download food log button -->
     <div style="flex: 1"></div>
     <v-btn color="primary" @click="downloadExcel"> Download Excel </v-btn>
   </div>
@@ -40,28 +41,27 @@
       class="elevation-2"
       density="comfortable"
     >
-      <!-- Food Column -->
-      <template #item.food="{ item }">
+      <template v-slot:[`item.food`]="{ item }">
         <div class="font-medium text-gray-900">{{ item.food.name }}</div>
         <!-- <div class="text-gray-500 text-sm">{{ item.mealType }}</div> -->
       </template>
 
       <!-- Action Column -->
-      <template #item.action="{ item }">
+      <template v-slot:[`item.action`]="{ item }">
         <v-btn icon="mdi-delete" color="red" variant="text" @click="deleteLog(item)"></v-btn>
       </template>
 
       <!-- Nutrient Columns -->
-      <template #item.calories="{ item }">{{ item.food.calories.toFixed(1) }}</template>
-      <template #item.protein="{ item }">{{ item.food.protein.toFixed(2) }}</template>
-      <template #item.carbs="{ item }">{{ item.food.carbs.toFixed(2) }}</template>
-      <template #item.fat="{ item }">{{ item.food.fat.toFixed(2) }}</template>
-      <template #item.sodium="{ item }">{{ item.food.sodium }}</template>
-      <template #item.sugar="{ item }">{{ item.food.sugar.toFixed(1) }}</template>
-      <template #item.servingWeight="{ item }">{{ item.food.servingWeight }}</template>
-      <template #item.servingUnit="{ item }">{{ item.food.servingUnit }}</template>
-      <template #item.servingQuant="{ item }">{{ item.food.servingQuant }}</template>
-      <template #item.mealType="{ item }">{{ item.mealType }}</template>
+      <template v-slot:[`item.calories`]="{ item }">{{ item.food.calories.toFixed(1) }}</template>
+      <template v-slot:[`item.protein`]="{ item }">{{ item.food.protein.toFixed(2) }}</template>
+      <template v-slot:[`item.carbs`]="{ item }">{{ item.food.carbs.toFixed(2) }}</template>
+      <template v-slot:[`item.fat`]="{ item }">{{ item.food.fat.toFixed(2) }}</template>
+      <template v-slot:[`item.sodium`]="{ item }">{{ item.food.sodium }}</template>
+      <template v-slot:[`item.sugar`]="{ item }">{{ item.food.sugar.toFixed(1) }}</template>
+      <template v-slot:[`item.servingWeight`]="{ item }">{{ item.food.servingWeight }}</template>
+      <template v-slot:[`item.servingUnit`]="{ item }">{{ item.food.servingUnit }}</template>
+      <template v-slot:[`item.servingQuant`]="{ item }">{{ item.food.servingQuant }}</template>
+      <template v-slot:[`item.mealType`]="{ item }">{{ item.mealType }}</template>
     </v-data-table-virtual>
   </div>
 </template>
@@ -76,7 +76,32 @@ import { useUserStore } from '@/stores/userStore'
 // Stores & Refs
 // ---------------------
 const userStore = useUserStore()
-const foodLogs = ref([])
+
+// define types for food logs so TypeScript knows the shape of each entry
+type Food = {
+  name: string
+  calories: number
+  protein: number
+  carbs: number
+  fat: number
+  sodium: number | string
+  sugar: number
+  servingWeight: number | string
+  servingUnit: string
+  servingQuant: number | string
+}
+
+type FoodLog = {
+  date: string
+  username?: string
+  mealType: string
+  food: Food
+}
+
+type FoodLogItem = FoodLog & { id: number }
+
+// typed ref for food logs
+const foodLogs = ref<FoodLog[]>([])
 const selectedDate = ref(new Date()) // currently selected date
 const menu = ref(false) // date picker menu open/close
 const today = new Date().toISOString().split('T')[0] // max selectable date
@@ -84,7 +109,8 @@ const today = new Date().toISOString().split('T')[0] // max selectable date
 // ---------------------
 // Table headers
 // ---------------------
-const headers = [
+type HeaderAlign = 'start' | 'end' | 'center'
+const headers: { title: string; key: string; align?: HeaderAlign }[] = [
   { title: 'Meal Type', key: 'mealType', align: 'center' },
   { title: 'Food', key: 'food', align: 'start' },
   { title: 'Calories', key: 'calories', align: 'center' },
@@ -141,16 +167,19 @@ const formattedDate = computed(() =>
 // ---------------------
 const filteredLogs = computed(() => {
   const target = selectedDate.value.toISOString().split('T')[0]
-  return foodLogs.value.filter((log) => log.date === target).map((log, i) => ({ ...log, id: i })) // assign unique id
+  return foodLogs.value.filter((log) => log.date === target).map((log, i) => ({ ...log, id: i }))
 })
 
 // ---------------------
 // Delete log
 // ---------------------
-async function deleteLog(item: any) {
+async function deleteLog(item: FoodLogItem) {
   try {
+    const username = encodeURIComponent(item.username ?? '')
+    const mealType = encodeURIComponent(item.mealType)
+    const foodName = encodeURIComponent(item.food.name)
     await axios.delete(
-      `http://localhost:3000/api/foodlog/delete/${item.username}/${item.date}/${item.mealType}/${item.food.name}`,
+      `http://localhost:3000/api/foodlog/delete/${username}/${item.date}/${mealType}/${foodName}`,
     )
     foodLogs.value = foodLogs.value.filter(
       (f) => f.food.name !== item.food.name || f.date !== item.date,
@@ -160,13 +189,19 @@ async function deleteLog(item: any) {
   }
 }
 
+// ---------------------
+// Download Excel File
+// ---------------------
 function downloadExcel() {
-  const username = userStore.user?.username;
+  const username = userStore.user?.username
   if (!username) {
-    alert('No username found. Please log in.');
-    return;
+    alert('No username found. Please log in.')
+    return
   }
-  window.open(`http://localhost:3000/api/foodlog/download?username=${encodeURIComponent(username)}`, '_blank');
+  window.open(
+    `http://localhost:3000/api/foodlog/download?username=${encodeURIComponent(username)}`,
+    '_blank',
+  )
 }
 </script>
 
